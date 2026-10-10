@@ -1,0 +1,27 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyInstaller & Build artifacts
+build/
+dist/
+*.spec.bak
+
+# Local Database & Runtime Data
+data/logs/*.log
+data/screenshots/*.png
+data/scheduler.db
+data/test_scheduler.db
+data/power_backup.json
+
+# Environments
+.venv/
+env/
+venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+
