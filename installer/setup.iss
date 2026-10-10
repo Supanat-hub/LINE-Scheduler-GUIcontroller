@@ -3,7 +3,7 @@
 ; =====================================================================
 
 #define MyAppName "LINE Scheduler"
-#define MyAppVersion "1.0.2"
+#define MyAppVersion "1.0.3"
 #define MyAppPublisher "LINE Scheduler"
 #define MyAppExeName "LineScheduler.exe"
 
@@ -38,13 +38,20 @@ Name: "defenderexclusion"; Description: "เพิ่มในข้อยกเ
 ; รวบรวมไฟล์ทั้งหมดจากโฟลเดอร์ dist\LineScheduler ที่ PyInstaller สร้างขึ้น
 Source: "..\dist\LineScheduler\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
+[InstallDelete]
+; ลบ Shortcut เก่าใน Startup folder ป้องกันการเปิดโปรแกรมซ้ำซ้อน 2 หน้าต่าง
+Type: files; Name: "{userstartup}\{#MyAppName}.lnk"
+
 [Icons]
 Name: "{autoprograms}\{#MyAppName}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autoprograms}\{#MyAppName}\Uninstall {#MyAppName}"; Filename: "{uninstallexe}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
-Name: "{userstartup}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: startupicon
+
+[Registry]
+; จัดการ Auto-start ผ่าน Registry เพียงช่องทางเดียว ป้องกันปัญหาเปิดซ้อนกับ Startup folder
+Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "LineScheduler"; ValueData: """{app}\{#MyAppExeName}"""; Flags: uninsdeletevalue; Tasks: startupicon
 
 [Run]
-Filename: "powershell.exe"; Parameters: "-NoProfile -WindowStyle Hidden -Command ""Start-Process powershell -Verb RunAs -ArgumentList '-NoProfile -WindowStyle Hidden -Command Add-MpPreference -ExclusionPath ''{app}'' -ExclusionProcess ''{#MyAppExeName}'''"""; Tasks: defenderexclusion; Flags: runhidden
+Filename: "powershell.exe"; Parameters: "-NoProfile -WindowStyle Hidden -Command ""Add-MpPreference -ExclusionPath '{app}' -ExclusionProcess '{#MyAppExeName}'"""; Verb: runas; Tasks: defenderexclusion; Flags: runhidden shellexec
 Filename: "{app}\{#MyAppExeName}"; Description: "เปิดใช้งาน {#MyAppName} ทันที"; Flags: nowait postinstall skipifsilent
 

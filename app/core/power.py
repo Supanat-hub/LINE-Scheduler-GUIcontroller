@@ -183,10 +183,28 @@ def restore_original_power_settings() -> bool:
 # Layer 3: Auto-start with Windows (Startup)
 # ==========================================
 
+def clean_legacy_startup_shortcut() -> None:
+    """ลบ Shortcut เก่าในโฟลเดอร์ Startup เพื่อไม่ให้เกิดการเปิดโปรแกรมซ้ำ 2 ครั้งร่วมกับ Registry Run"""
+    try:
+        appdata = os.environ.get("APPDATA", "")
+        if appdata:
+            startup_dir = Path(appdata) / r"Microsoft\Windows\Start Menu\Programs\Startup"
+            for lnk_name in ["LINE Scheduler.lnk", "LineScheduler.lnk"]:
+                lnk_file = startup_dir / lnk_name
+                if lnk_file.exists():
+                    lnk_file.unlink(missing_ok=True)
+                    logger.info(f"ลบ Shortcut ในโฟลเดอร์ Startup ที่ซ้ำซ้อนเรียบร้อย: {lnk_file}")
+    except Exception as e:
+        logger.warning(f"ลบ Startup shortcut เก่าไม่สำเร็จ: {e}")
+
+
 def set_startup_enabled(enable: bool, executable_path: Optional[str] = None) -> bool:
     """
     ชั้นที่ 3: เปิดหรือปิดให้โปรแกรมทำงานอัตโนมัติเมื่อเปิดเครื่อง (At Log on)
     """
+    # เคลียร์ Shortcut เก่าในโฟลเดอร์ Startup ทุกครั้งเพื่อป้องกันการเปิดซ้ำ
+    clean_legacy_startup_shortcut()
+
     if executable_path is None:
         if getattr(sys, 'frozen', False):
             executable_path = f'"{sys.executable}"'

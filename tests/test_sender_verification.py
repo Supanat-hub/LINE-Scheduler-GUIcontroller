@@ -2,9 +2,14 @@
 Unit and integration tests for multi-layer chat verification and auto-retry in LineSender
 """
 
+import sys
+from pathlib import Path
 import unittest
 from unittest.mock import MagicMock, patch
 import win32con
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(BASE_DIR))
 
 from app.core.sender import LineSender, SendResult
 from app.core.preflight import PreflightReport

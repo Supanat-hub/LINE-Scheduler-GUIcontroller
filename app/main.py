@@ -12,10 +12,15 @@ sys.path.insert(0, str(BASE_DIR))
 # Ensure early desktop attachment before importing GUI/UIA modules
 import app
 from app.core.logger import logger
+from app.core.single_instance import ensure_single_instance
 from app.ui.main_window import MainWindow
 
 
 def main():
+    if not ensure_single_instance():
+        logger.info("[INFO] โปรแกรม LINE Scheduler กำลังทำงานอยู่แล้ว สั่งปิด Instance ที่สองเรียบร้อย")
+        sys.exit(0)
+
     logger.info("กำลังเริ่มต้นโปรแกรม LINE Scheduler...")
     try:
         app_window = MainWindow()

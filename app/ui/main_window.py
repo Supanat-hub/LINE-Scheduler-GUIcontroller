@@ -25,6 +25,7 @@ from app.core.power import (
     restore_original_power_settings,
     set_startup_enabled,
     is_startup_enabled,
+    clean_legacy_startup_shortcut,
     POWER_BACKUP_FILE
 )
 from app.ui.job_editor import JobEditorDialog
@@ -58,6 +59,9 @@ class MainWindow(ctk.CTk):
 
         # เปิด Keep-Awake ชั้นที่ 1
         enable_runtime_keep_awake()
+
+        # ล้าง Shortcut ในโฟลเดอร์ Startup เพื่อป้องกันการเปิดโปรแกรมซ้ำ 2 หน้าต่าง
+        clean_legacy_startup_shortcut()
 
         # ตั้งค่าเปิดพร้อม Windows เป็นค่าเริ่มต้น (Auto-start by Default)
         if self.db.get_setting("startup_initialized") is None:

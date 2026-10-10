@@ -25,5 +25,5 @@ POST_SEND_DELAY_SEC = 0.5
 
 # Application Info
 APP_NAME = "LINE Scheduler"
-APP_VERSION = "1.0.0"
+APP_VERSION = "1.0.3"
 
