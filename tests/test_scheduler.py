@@ -116,8 +116,8 @@ def test_scheduler_live_trigger():
     next_run = scheduler_mgr.get_next_run_time(job_id)
     print(f"[*] ตรวจสอบจาก APScheduler: กำหนดรันครั้งถัดไปคือ {next_run}")
 
-    print("[*] กำลังรอให้ Scheduler ทำงานอัตโนมัติ (ประมาณ 6 วินาที)...")
-    for i in range(6, 0, -1):
+    print("[*] กำลังรอให้ Scheduler ทำงานอัตโนมัติ (ประมาณ 10-12 วินาที)...")
+    for i in range(12, 0, -1):
         time.sleep(1)
         if executed_events:
             break

@@ -45,11 +45,10 @@ class TestTrayWake(unittest.TestCase):
 
     def test_03_health_monitor_in_tray(self):
         """ทดสอบ HealthMonitor ว่ารายงานสถานะปกติเมื่อ LINE อยู่ในถาดระบบ"""
-        # ปิดลงถาดระบบ
+        # ปิดหน้าต่างทั้งหมดลงถาดระบบ
         wins = get_all_line_windows()
         for w in wins:
-            if w['is_main']:
-                win32gui.PostMessage(w['hwnd'], win32con.WM_CLOSE, 0, 0)
+            win32gui.PostMessage(w['hwnd'], win32con.WM_CLOSE, 0, 0)
         time.sleep(1.0)
 
         monitor = HealthMonitor()

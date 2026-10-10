@@ -129,7 +129,14 @@ def find_line_tray_window() -> Optional[int]:
             except Exception:
                 tray_hwnds.append(hwnd)
 
-    win32gui.EnumWindows(enum_cb, None)
+    for _ in range(3):
+        try:
+            tray_hwnds.clear()
+            win32gui.EnumWindows(enum_cb, None)
+            break
+        except Exception:
+            time.sleep(0.1)
+
     return tray_hwnds[0] if tray_hwnds else None
 
 
@@ -139,19 +146,23 @@ def wake_line_from_tray(timeout_sec: float = 3.0) -> bool:
     โดยส่งสัญญาณ MYWM_NOTIFYICON (0x8065) เข้า QTrayIconMessageWindow
     """
     attach_to_default_desktop()
+    # หากหน้าต่างหลักเปิดอยู่แล้ว ไม่จำเป็นต้องส่งสัญญาณซ้ำ (ป้องกันการ toggle ปิด)
+    wins = get_all_line_windows()
+    if any(w['is_main'] and not w['is_in_tray'] for w in wins):
+        return True
+
     tray_hwnd = find_line_tray_window()
     if not tray_hwnd:
         return False
 
     logger.info("พบ LINE ทำงานอยู่ในถาดระบบ (Tray) -> กำลังส่งสัญญาณปลุกหน้าต่างหลักขึ้นมา...")
     # MYWM_NOTIFYICON = 0x8065 (WM_APP + 101 ใน Qt 6)
-    # Qt QSystemTrayIcon ใช้ ID = 1 หรือ 0
-    for uId in [1, 0]:
-        win32gui.PostMessage(tray_hwnd, 0x8065, uId, win32con.WM_LBUTTONDOWN)
-        time.sleep(0.05)
-        win32gui.PostMessage(tray_hwnd, 0x8065, uId, win32con.WM_LBUTTONUP)
-        time.sleep(0.05)
-        win32gui.PostMessage(tray_hwnd, 0x8065, uId, win32con.WM_LBUTTONDBLCLK)
+    # Qt QSystemTrayIcon ใช้ ID = 1
+    win32gui.PostMessage(tray_hwnd, 0x8065, 1, win32con.WM_LBUTTONDOWN)
+    time.sleep(0.05)
+    win32gui.PostMessage(tray_hwnd, 0x8065, 1, win32con.WM_LBUTTONUP)
+    time.sleep(0.05)
+    win32gui.PostMessage(tray_hwnd, 0x8065, 1, win32con.WM_LBUTTONDBLCLK)
 
     # รอจนกว่าหน้าต่างหลัก (Qt663QWindowIcon หรือ title='LINE') จะถูกสร้างขึ้นมา
     start_t = time.time()
@@ -197,11 +208,20 @@ def run_preflight_check(chat_title: str, auto_wake_tray: bool = True) -> Preflig
 
     target_window = None
     target_clean = chat_title.strip().lower()
+    # 1. ตรวจสอบชื่อที่ตรงกันแบบสมบูรณ์ (Exact Match) ก่อน
     for w in chat_windows:
         w_title_clean = w['title'].strip().lower()
-        if target_clean == w_title_clean or target_clean in w_title_clean:
+        if target_clean == w_title_clean:
             target_window = w
             break
+
+    # 2. หากไม่พบ ค่อยใช้ Substring Match
+    if not target_window:
+        for w in chat_windows:
+            w_title_clean = w['title'].strip().lower()
+            if target_clean in w_title_clean:
+                target_window = w
+                break
 
     target_found = target_window is not None
     target_hwnd = target_window['hwnd'] if target_window else None
