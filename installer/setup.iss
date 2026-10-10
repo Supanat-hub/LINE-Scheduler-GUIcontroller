@@ -3,7 +3,7 @@
 ; =====================================================================
 
 #define MyAppName "LINE Scheduler"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "1.0.2"
 #define MyAppPublisher "LINE Scheduler"
 #define MyAppExeName "LineScheduler.exe"
 
