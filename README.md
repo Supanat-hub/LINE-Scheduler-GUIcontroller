@@ -2,10 +2,24 @@
 
 โปรแกรมตั้งเวลาส่งข้อความเข้ากลุ่ม LINE หรือแชทส่วนตัวอัตโนมัติบนระบบปฏิบัติการ Windows โดยควบคุมแอป LINE Desktop จริงผ่านเทคโนโลยี Windows UI Automation (UIA) และ Win32 API 
 
+[![Download Installer](https://img.shields.io/badge/Download-Installer%20(.exe)-2563EB?style=for-the-badge&logo=windows)](https://github.com/Supanat-hub/LINE-Scheduler-GUIcontroller/releases/download/v1.0.0/LineScheduler-Setup.exe)
+[![Download Portable](https://img.shields.io/badge/Download-Portable%20(.zip)-10B981?style=for-the-badge&logo=archive)](https://github.com/Supanat-hub/LINE-Scheduler-GUIcontroller/releases/download/v1.0.0/LineScheduler-v1.0.0-Portable.zip)
+[![Release v1.0.0](https://img.shields.io/badge/Release-v1.0.0-orange?style=for-the-badge)](https://github.com/Supanat-hub/LINE-Scheduler-GUIcontroller/releases/tag/v1.0.0)
+
+---
+
+## ดาวน์โหลดใช้งาน (Downloads)
+
+* **[LineScheduler-Setup.exe](https://github.com/Supanat-hub/LINE-Scheduler-GUIcontroller/releases/download/v1.0.0/LineScheduler-Setup.exe)** (26.6 MB): ตัวติดตั้งมาตรฐาน (แนะนำ) พร้อมสร้าง Shortcut บนเดสก์ท็อปและเปิดทำงานพร้อม Windows
+* **[LineScheduler-v1.0.0-Portable.zip](https://github.com/Supanat-hub/LINE-Scheduler-GUIcontroller/releases/download/v1.0.0/LineScheduler-v1.0.0-Portable.zip)** (37.4 MB): แบบพกพา แตกไฟล์แล้วเปิด `LineScheduler.exe` ใช้งานได้ทันทีไม่ต้องติดตั้ง
+
 ---
 
 ## คุณสมบัติเด่น (Features)
 
+* **ระบบปลุก LINE จากถาดระบบอัตโนมัติ (Tray Auto-Wake)**: แม้ปิดหน้าต่าง LINE ลงถาดระบบ (System Tray) ระบบจะส่งสัญญาณปลุกหน้าต่างหลักของ LINE ขึ้นมาและส่งข้อความให้อัตโนมัติ
+* **ระบบ Auto-Open ห้องแชท**: ไม่จำเป็นต้องเปิดหน้าต่างแชทแยกทิ้งไว้ล่วงหน้า ระบบสามารถค้นหาและเปิดห้องแชทผ่านหน้าต่างหลักได้ทันที
+* **ข้อยกเว้น Windows Defender ในคลิกเดียว**: มีปุ่มเพิ่มโฟลเดอร์โปรแกรมในรายการยกเว้นของ Windows Defender ป้องกัน Antivirus ลบไฟล์
 * **Dual Automation Engine ที่เสถียรที่สุด**:
   * **Primary Engine (Direct UIA Injection)**: ตรวจจับคอนโทรล `AutoSuggestTextArea` ของ Qt โดยตรง และส่งข้อความผ่าน Win32 Message Loop (`PostMessage`) โดยไม่ต้องแย่งเมาส์และไม่ต้องแย่งคลิปบอร์ดของผู้ใช้
   * **Secondary Engine (Fallback)**: พิกัดสัมพัทธ์ + คลิปบอร์ด + `Ctrl+V` สำรองอัตโนมัติ
